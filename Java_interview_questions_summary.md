@@ -298,13 +298,15 @@ ref:https://juejin.im/entry/57bfab077db2a20068ebf9d2
      4.LinkedList需要更多的内存，因为ArrayList的每个索引的位置是实际的数据，而LinkedList中的每个节点中存储的是实际的数据和前后节点的位置。  
      ref:http://www.importnew.com/6629.html  
 
+#### ArrayList的remove方法讲解
+
 #### 数组和链表的区别  
      数组静态分配内存，链表动态分配内存；   
      数组在内存中连续，链表不连续；     
      数组元素在栈区，链表元素在堆区；   
      数组利用下标定位，时间复杂度为O(1)，链表定位元素时间复杂度O(n)； 
      数组插入或删除元素的时间复杂度O(n)，链表的时间复杂度O(1)。 
-
+    
 * 二叉树的深度优先遍历和广度优先遍历的具体实现
 * 堆的结构
 * 堆和树的区别
@@ -1112,6 +1114,9 @@ https://juejin.im/post/5c875fb96fb9a049a82029b4
       的做判断和更新，因为这时候不会有别人更新这条商品库存。  
     ref:https://www.jianshu.com/p/f5ff017db62a
 
+##### mysql分库分表
+ref:http://www.cnblogs.com/405845829qq/p/7552736.html
+
 * mysql 问题排查都有哪些手段？
 * 如何做 mysql 的性能优化   
 ref:https://www.jianshu.com/p/4af41b682e06  
@@ -1235,7 +1240,8 @@ https://maimai.cn/article/detail?fid=1188457423&efid=b6VprMXHZGlLNLckx8yfAQ
 * [深入分析ConcurrentHashMap](http://www.infoq.com/cn/articles/ConcurrentHashMap#)
 
 
-
+* 分布式事务：
+ref:https://yq.aliyun.com/articles/582282
 
 
 ### ref
