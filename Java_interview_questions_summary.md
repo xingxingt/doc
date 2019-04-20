@@ -755,6 +755,16 @@ ref:https://juejin.im/entry/57bfab077db2a20068ebf9d2
     ref:ref:https://github.com/xingxingt/concurrent/tree/master/src/main/java/com/concurrent/concurrent/
     threadpool/ThreadPoolRejectedDemo.java
 
+#### 线程池获取返回值
+    线程池提交任务的方法:  
+    1.public void execute(Runnable command);  该方法没有返回值，而且只能提交Runnable；   
+    2.public Future<?> submit(Runnable task);   
+      public <T> Future<T> submit(Runnable task, T result)    
+      public <T> Future<T> submit(Callable<T> task)     
+      这个方法接收两种参数，Callable和Runnable。返回值是Future。   
+    使用submit方法有一个特点就是，他的异常可以在主线程中catch到。而使用execute方法执行任务是捕捉不到异常的。  
+    ref:ref:https://blog.csdn.net/qq_25806863/article/details/71214033
+
 #### java的BlockQueue
     ref:http://www.importnew.com/28053.html
 
