@@ -670,6 +670,12 @@ ref:https://juejin.im/entry/57bfab077db2a20068ebf9d2
     ref:https://www.cnblogs.com/aigongsi/archive/2012/04/01/2429166.html
 
 
+#### transient关键字的作用
+    1）一旦变量被transient修饰，变量将不再是对象持久化的一部分，该变量内容在序列化后无法获得访问。  
+    2）transient关键字只能修饰变量，而不能修饰方法和类。注意，本地变量是不能被transient关键字修饰的。变量如果是用户自定义类变量，  
+        则该类需要实现Serializable接口。  
+    3）被transient关键字修饰的变量不再能被序列化，一个静态变量不管是否被transient修饰，均不能被序列化。
+
 #### synchronized 和volatile 关键字的区别
     synchronized主要作用于执行控制，该线程获取了锁其他线程也要获取该锁的话就会被阻塞，这样就保护了被synchronized修饰的代码块不被其他线程访问，  
     同时Synchronized会建立一个内存屏障，内存屏障指令保证了cpu的所有操作结果都会刷新到主存中，这样就保证了共享资源的可见性；   
