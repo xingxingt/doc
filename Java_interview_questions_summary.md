@@ -296,10 +296,11 @@
      2,如果table容量为0，但是设置了阈值，则表示初始化时设定了阈值和容量的情况，则新table的容量未旧table的阈值;  
      3,如果table的容量为0,并且未设置阈值，则新表的容量为默认容量(DEFAULT_INITIAL_CAPACITY=16),新表的阈值等于  
        默认容量16 * 默认加载因子0.75f = 12;    
-     4,经过前3步骤之后，判断如果新的阈值依然为0，则根据新表容量 和 加载因子 求出新的阈值(newCap * loadFactor);  
+     4,经过前3步骤之后，判断如果新的阈值依然为0，则根据新表容量和加载因子求出新的阈值(newCap * loadFactor);  
      5,根据计算得到新的容量和阈值构建新的table;   
      6,构建新的table后就要将旧表中的数据迁移到新的table中;即遍历旧table，然后根据位运算即(hashCode & (tableLength - 1))，将旧table    
-       中的元素的hashcode映射到新表中的位置;放入新表时也要考虑到hash碰撞之后的处理，即转为链表或者红黑树;      
+       中的元素的hashcode映射到新表中的位置;放入新表时也要考虑到hash碰撞之后的处理，即转为链表或者红黑树; 将旧表中的元素置空  
+       (oldTab[j] = null;),让JVM进行GC回收;         
      ref:https://www.jianshu.com/p/aa017a3ddc40  
 
 
