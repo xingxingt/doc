@@ -271,6 +271,38 @@
        
 ![](https://ws3.sinaimg.cn/large/006tKfTcgy1g0wub3q225j30ym0hsjsd.jpg)
 
+#### HashMap写数据流程
+     1,首先判断table是否为空,如果为空则触发resize();   
+     2,如果table不为空，则计算key的hashcode，即table中插入的索引位置i;  
+     3,如果table[i]不存在，则直接将数据插入table[i]位置     
+     4,如果table[i]位置已存在数据,则判断该key是否存在，如果key已存在，则直接覆盖掉table[i]位置的数据，即更新value的值；
+       如果key不存在则判断table[i]对应位置是链表还是红黑树,如果是链表则遍历链表准备在链表尾部插入数据，如果链表的长度大于8  
+       则将链表转为红黑树,如果该key在链表中已存在则直接覆盖掉链表中key的值；如果table[i]位置为红黑树，则将<key,value>插入  
+       红黑树中；注意：红黑树中的元素个数小于6时，将红黑树转化为链表；   
+     5，检查table的大小是否到达设置的阈值大小，如果到达则进行resize();  
+     ref:https://www.jianshu.com/p/aa017a3ddc40  
+     
+![](https://ws1.sinaimg.cn/large/006tNc79gy1g2bb2qj0nlj30z10u0q6l.jpg)
+
+
+#### HashMap的resize()流程
+     HashMap的扩容问题：1，每次扩容为原来容量的2倍;2,如果将旧table中的数据迁移到新申请的table中，并将老的table数据释放掉;  
+     步骤: 
+     1,先判断table的容量是否>0,如果>0则判断table的容量是否达到上限(MAXIMUM_CAPACITY),如果达到上限则将当前的阈值(threshold)设置为  
+       Integer.MAX_VALUE,然后返回旧的table;如果table的容量未达到上限则将新的table容量和阈值都设置为原来的2倍;    
+       Q:这里为什么阈值达到MAXIMUM_CAPACITY就不在扩容了呢?    
+       A:就算我们的内存足够大，桶数组的大小已经达到了MAXIMUM_CAPACITY，此时HashMap只是不再进行扩容了，  
+         新的Key-Value对还是可以添加到HashMap中，毕竟它是通过链表和红黑树来解决Hash冲突的。
+     2,如果table容量为0，但是设置了阈值，则表示初始化时设定了阈值和容量的情况，则新table的容量未旧table的阈值;  
+     3,如果table的容量为0,并且未设置阈值，则新表的容量为默认容量(DEFAULT_INITIAL_CAPACITY=16),新表的阈值等于  
+       默认容量16 * 默认加载因子0.75f = 12;    
+     4,经过前3步骤之后，判断如果新的阈值依然为0，则根据新表容量 和 加载因子 求出新的阈值(newCap * loadFactor);  
+     5,根据计算得到新的容量和阈值构建新的table;   
+     6,构建新的table后就要将旧表中的数据迁移到新的table中;即遍历旧table，然后根据位运算即(hashCode & (tableLength - 1))，将旧table    
+       中的元素的hashcode映射到新表中的位置;放入新表时也要考虑到hash碰撞之后的处理，即转为链表或者红黑树;      
+     ref:https://www.jianshu.com/p/aa017a3ddc40  
+
+
 #### HashSet与HashMap怎么判断集合元素重复？
      因为HashSet是基于HashMap来实现的，所以HashSet和HashMap都根据对象的hashCode和equals来判断的，如果对象和
      集合中元素的hashcode和equals都相同，则说明是重复元素;
