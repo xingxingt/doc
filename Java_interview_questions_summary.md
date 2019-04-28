@@ -822,7 +822,18 @@ ref:https://juejin.im/entry/57bfab077db2a20068ebf9d2
 
 #### Java的并发、多线程、线程模型
     ref:http://ifeve.com/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E6%A8%A1%E5%9E%8B/
-    
+  
+#### threadlocal
+    threadlocal原理:   
+    threadlocal其实是在每个线程中维护着一个ThreadLocalMap，该map是以当前线程为key，以set的value为value；     
+    threadlocal的get或者set方法就是通过线程内部的ThreadlocalMap来进行对象的存取;     
+    threadlocal本身并不存放值，他只是作为key能让线程从TheadlocalMap中获取value；   
+    所以threadlocal能够实现线程间的数据隔离，获取当前线程的局部变量值，不受其他线程影响;    
+    设计理念:   
+    ThreadLocal的设计目的是实现在当前线程中有自己的变量，并不是为了解决高并发和共享变量的问题;  
+    ref:https://juejin.im/post/5ac2eb52518825555e5e06ee#comment
+  
+  
 * 谈谈对多线程的理解
 * 多线程有什么要注意的问题？
 * 谈谈你对并发编程的理解并举例说明
