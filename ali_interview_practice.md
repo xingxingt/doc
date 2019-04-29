@@ -41,9 +41,13 @@
     
     
 #### select * form t where a=? and b>? order by c limit 0,100如何加索引   
+    使用联合索引KEY `联合索引` (`a`,`b`,`c`),可以用EXPLAIN查看索引是否生效;   
+    当创建(a,b,c)联合索引时，相当于创建了(a)单列索引，(a,b)联合索引以及(a,b,c)联合索引   
+    想要索引生效的话,只能使用 a和a,b和a,b,c三种组合；   
+    ref:https://blog.csdn.net/Abysscarry/article/details/80792876
+
+#### 什么是聚族索引和非聚族索引   
     
-
-
 
 
     
