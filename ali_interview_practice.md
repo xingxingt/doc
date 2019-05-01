@@ -46,14 +46,28 @@
     想要索引生效的话,只能使用 a和a,b和a,b,c三种组合；   
     ref:https://blog.csdn.net/Abysscarry/article/details/80792876
 
-#### 什么是聚族索引和非聚族索引   
-    
-    
+#### 什么是聚族索引和非聚族索引,二级索引   
+    聚族索引：索引和数据存储在一块，即都在一个B-tree上，一般主键索引都叫做聚族索引;   
+             mysql中的InnoDB的主键索引为聚族索引，而MyISAM存储引擎采用的是非聚族索引，即索引和数据存储是分开的;   
+    非聚族索引: 索引数据和数据存储是分开的；例如:MYISAM引擎的索引文件（.MYI）和数据文件(.MYD)是相互独立的。   
+    二级索引： 二级索引存储的是某条记录的主键，而不是数据存储地址，例如：InnoDB主键是聚族索引，而唯一索引，普通索引，前缀索引等都是  
+             二级索引又称为辅助索引;   
+    ref:https://blog.csdn.net/jijianshuai/article/details/79084874     
+        https://blog.csdn.net/alexdamiao/article/details/51934917    
+聚族索引InnoDB,如下图:     
+聚簇索引中的每个叶子节点包含主键值、事务ID、回滚指针(rollback pointer用于事务和MVCC）和余下的列(如col2)
+![](https://ws4.sinaimg.cn/large/006tNc79gy1g2linx2ca0j31ia0o20zu.jpg)  
+非聚族索引MyISAM,如下图:    
+MYISAM引擎的索引文件（.MYI）和数据文件(.MYD)是相互独立的。
+![](https://ws3.sinaimg.cn/large/006tNc79gy1g2lipiwjqtj31ds0lcdkx.jpg)   
+二级索引如下:   
+![](https://ws4.sinaimg.cn/large/006tNc79gy1g2liro356bj31460l0aaw.jpg)
+
     
 #### 解释下乐观锁和悲观锁
      乐观锁: 假定不会出现并发冲突，即乐观锁认为每次操作数据的时候都不会有其他有人修改数据，直到提交任务的时候才会去检查数据是否会被修改，  
      适合读多写少的场景来提高吞吐量;      
-     悲观锁; 假定会出现并发冲突，悲观锁认为每次操作数据都会有人修改数据，所以每次都会加锁；  
+     悲观锁; 假定会出现并发冲突，悲观锁认为每次操作数据都会有人修改数据，所以每次都会加锁；并发性能低;     
 
 
     
