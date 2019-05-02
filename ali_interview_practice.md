@@ -74,12 +74,20 @@ MYISAM引擎的索引文件（.MYI）和数据文件(.MYD)是相互独立的。
      
 
 #### 如何理解幂等？项目接口的幂等如何实现?  
-    
-
-
-
-
-
+     幂等性是指通过同样的参数多次调用同样的方法，返回的结果都是一样的，幂等性强调的是外界通过接口对系统内部的资源影响，例如数据库的查询操作   
+     该操作是天生幂等性的，因为查询操作不会改变系统内存资源，即表数据;      
+     实现方法： 可以通过全局唯一ID，去重表，插入或更新，版本控制，状态机控制,分布式锁(redis,zk等),前端也可以通过token来防止重复提交;    
+     
+#### 两个有序的list,求交集     
+     ref:https://github.com/xingxingt/centrecode/blob/master/src/main/java/dataStructure/ListGetIntersection.java
+      
+     
+#### JVM判断对象是否回收   
+     1,引用计数法，该方法存在依赖循环的缺陷     
+     2,可达性分析法(GC Root)    
+       可以作为GC Root的对象: 虚拟机栈中引用的对象(栈帧中的局部变量表),方法区中静态属性引用的对象，方法区中常量引用的对象，  
+       本地方法栈中Native引用的对象   
+       
 
 
 #### 动态代理的实现方式？Cglib和Jdk的动态代理的区别   
@@ -88,8 +96,19 @@ MYISAM引擎的索引文件（.MYI）和数据文件(.MYD)是相互独立的。
         通过修改其字节码生成子类来实现的；         
       2,DK动态代理只能对实现了接口的类生成代理,而不能针对类，CGLIB通过继承和引用的方式进行代理，无论目标对象有没有实现接口都可以代理，
         但是无法处理final的情况。  
+        
+        
+#### 反射能获取类里面方法的名称吗？参数名称？参数类型?  
+     可以通过Method[] ms = class.getMethods();获取类里面每个方法的名称，包括从父类中继承的方法;      
+     通过Class[] paramTypes = ms[i].getParameterTypes();获取方法中参数的类型;    
+     通过ms[i].getParameters()[0].getName()获取参数名称      
+     ref:https://github.com/xingxingt/centrecode/blob/master/src/main/java/reflectdemo/ReflectDemo2.java      
+     
+ #### 分布式锁有哪些主流实现方式？redis和zk的实现方法有什么区别?    
+     
+
       
-#### 
+
    
    
    
