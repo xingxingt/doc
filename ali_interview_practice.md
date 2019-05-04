@@ -104,8 +104,17 @@ MYISAM引擎的索引文件（.MYI）和数据文件(.MYD)是相互独立的。
      通过ms[i].getParameters()[0].getName()获取参数名称      
      ref:https://github.com/xingxingt/centrecode/blob/master/src/main/java/reflectdemo/ReflectDemo2.java      
      
- #### 分布式锁有哪些主流实现方式？redis和zk的实现方法有什么区别?    
-     
+#### 分布式锁有哪些主流实现方式？redis和zk的实现方法有什么区别?    
+     实现方式:mysql,zk,redis;    
+     mysql: 可以使用select for update来实现，优点：理解起来简单，不需要维护第三方中间件，但是需要自己加事务维护锁，性能局限于数据库;   
+            比起缓存的方式实现性能较低，不适用于高并发场景;    
+     zookeeper: zk是基于内部的目录的创建，删除来实现分布式锁机制，依赖：节点有序性，临时节点和事件监听；一般使用Curator对zk底层的封装     
+            来实现，比较简单易行，Curator的高级API封装了分布式锁，可重入锁,读写锁机制等； 缺点：需要额外维护第三方中间件，性能和mysql   
+            相差无几，增加维护成本;   
+     redis:使用setNx(set if not exist)来简单实现，还可以使用Redission来实现锁机制，使用Lua脚本可以实现其原子性的操作; 
+           优点：redis实现的分布式锁机制的性能比mysql和zk的性能要高，缺点是需要维护redis集群；    
+     ref:http://www.dengshenyu.com/java/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/2017/10/23/zookeeper-distributed-lock.html    
+         https://juejin.im/post/5bbb0d8df265da0abd3533a5    
 
       
 
