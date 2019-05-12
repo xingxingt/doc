@@ -179,6 +179,11 @@
     可以调用Iterator()方法;  
     ref:https://www.jianshu.com/p/b65ddde3acd8
     
+
+#### StringBuilder与StringBuffer的区别
+    StringBuffer是线程安全的，里面的方法使用`synchronized`关键字来实现；而StringBuilder是非线程安全的；   
+    在单线程下，StringBuilder更高效；     
+    
 #### 集合类/集合框架图
 
 ![](https://ws3.sinaimg.cn/large/006tKfTcgy1g0pceuy5n3j31g90u0dhn.jpg)
