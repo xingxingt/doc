@@ -68,10 +68,36 @@
      C、用于衔接内存metadata和持久化元数据镜像fsimage之间的操作日志（edits文件）注：当客户端对hdfs中的文件进行新增或者修改操作，   
         操作记录首先被记入edits日志文件中，当客户端操作成功后，相应的元数据会更新到内存meta.data中
  ![](https://ws1.sinaimg.cn/large/006tNc79gy1g300lw8dxhj31380latax.jpg)       
-        
-          
-* Hadoop3.0做了哪些改进
-* 谈谈YARN
+
+#### NameNode的安全模式
+     safemode是namenode的一种状态（active/standby/safemode安全模式）;     
+     NameNode的安全模式:   
+     a、namenode发现集群中的block丢失率达到一定比例时（0.01%），namenode就会进入安全模式，在安全模式下，客户端不能对任何数据进行操作，   
+        只能查看元数据信息（比如ls/mkdir）
+     b、如何退出安全模式？
+        找到问题所在，进行修复（比如修复宕机的datanode）    
+        或者可以手动强行退出安全模式（没有真正解决问题）： hdfs namenode --safemode leave    
+     c、在hdfs集群正常冷启动时，namenode也会在safemode状态下维持相当长的一段时间，此时你不需要去理会，等待它自动退出安全模式即可;   
+     NameNode冷启动进入安全模式的原因:   
+     namenode的内存元数据中，包含文件路径、副本数、blockid，及每一个block所在datanode的信息，而fsimage中，不包含block所在的datanode信息，  
+     那么，当namenode冷启动时，此时内存中的元数据只能从fsimage中加载而来，从而就没有block所在的datanode信息——>就会导致namenode认为所有   
+     的block都已经丢失——>进入安全模式——>datanode启动后，会定期向namenode汇报自身所持有的blockid信息，——>随着datanode陆续启动，   
+     从而陆续汇报block信息，namenode就会将内存元数据中的block所在datanode信息补全更新——>找到了所有block的位置，从而自动退出安全模式;  
+ 
+ #### Yarn的架构
+     Yarn作为通用的资源调度管理器;     
+     工作流程:    
+     1,客户端向ResourceManager提交应用程序，其中包括ApplicationMaster、启动ApplicationMaster的命令、用户程序等；   
+     2,ResourceManager为该应用程序分配第一个Container，并与对应NodeManager通信，要求它在这个Container中启动应用程序的ApplicationMaster；  
+     3,ApplicationMaster向ResourceManager注册自己，启动成功后与ResourceManager保持心跳；   
+     4,ApplicationMaster向ResourceManager申请资源；   
+     5,申请资源成功后，由ApplicationMaster进行初始化，然后与NodeManager通信，要求NodeManager启动Container。   
+       然后ApplicationMaster与NodeManager保持心跳，从而对NodeManager上运行的任务进行监控和管理；    
+     6,Container运行期间，向ApplicationMaster汇报自己的进度和状态信息，以便ApplicationMaster掌握任务运行状态，      
+       从而在任务失败是可以重新启动；应用运行结束后，ApplicationMaster向ResourceManager注销自己，允许其所属的Container回收。    
+![](https://ws3.sinaimg.cn/large/006tNc79gy1g300u84rzsj316u0ngjt4.jpg) 
+
+#### Hadoop3.0做了哪些改进
 * 为什么项目选择使用Spark，你觉得Spark的优点在哪里
 * 了解Flink与Storm嘛，他们与Spark Streaming的区别在哪里
 * 1TB文件，取重复的词，top5指定的资源的场景下，如何快速统计出来
