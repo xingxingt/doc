@@ -1,3 +1,24 @@
+
+#### spark介绍
+    spark是apache的顶级开源项目,它是一个快速的通用的大数据处理引擎，它的处理方式和Hadoop的MR很相似，但是与MR不同是，Spark即基于内存，可伸缩的  
+    计算框架，具有高效，低延迟的特点；  
+    spark作为快速的一站式大数据处理平台，拥有各种不同的应用：批处理，流计算，机器学习，图计算，交互式查询等；  
+    spark的多语言的支持:java，scala,python,R；    
+    
+#### spark作业提交流程   
+    1,client通过submit提交作业，并执行用户代码的main函数；   
+    2，然后开始启动SparkContext以及CoarseGrainedExecutorBackEnnd；  
+    3，在Spark启动的时候会去初始化SparkUI，环境SparkEnv，DAGScheduler调度器划分stage，task的调度器TaskSchedulerImpl，以及调度   
+       器CoarseGrainedSchedulerBackend；
+    4，DAGScheduler划分完作业后将依次提交stage对应的Taskset给TaskSchedulerImpl;   
+    5,TaskSchedulerImpl与Driver(DriverBackEnd)通信进行launchTask； 
+    6,CoarseGrainedSchedulerBackend收到消息后用executor去启动一个task执行任务，最终是TaskRunner的run方法内运行；     
+![](https://ws1.sinaimg.cn/large/006tNc79gy1g385qdbnmhj30zh0u0dkc.jpg)
+
+#### 数据模型
+    星型模型和雪花型模型;     
+    
+
 #### 小文件的合并
     hadoop不适合处理小文件，因为小文件过多会是NameNode的元数据空间过大，因为hadoop的每个文件数据都在NameNode中维护，每块block的元数据大小   
     150字节左右，所以减少小文件可以减少NameNode元数据空间的压力;   
