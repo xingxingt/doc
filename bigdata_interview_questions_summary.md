@@ -4,7 +4,21 @@
     计算框架，具有高效，低延迟的特点；  
     spark作为快速的一站式大数据处理平台，拥有各种不同的应用：批处理，流计算，机器学习，图计算，交互式查询等；  
     spark的多语言的支持:java，scala,python,R；    
-    
+
+
+#### spark有哪些会产生shuffle算子
+    去重:   
+    distinct()    
+    聚合:      
+    reduceByKey(),groupBy(),groupByKey(),aggregateByKey(),combineByKey()    
+    排序:  
+    sortByKey(),sortBy()     
+    重分区:  
+    coalesce(),repartition()     
+    集合或者表操作:   
+    Intersection(),Substract(),SubstractByKey(),Join(),LeftOutJoin()   
+
+
 #### spark作业提交流程   
     1,client通过submit提交作业，并执行用户代码的main函数；   
     2，然后开始启动SparkContext以及CoarseGrainedExecutorBackEnnd；  
