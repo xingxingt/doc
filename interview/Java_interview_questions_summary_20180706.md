@@ -826,7 +826,7 @@ ref:https://juejin.im/entry/57bfab077db2a20068ebf9d2
     1，当线程数量为达到corePoolSize数量时则新建一个核心线程去执行；   
     2，线程数量达到了corePools，则将任务移入队列等待；  
     3，队列已满，新建线程(非核心线程)执行任务；    
-    4，队列已满，总线程数又达到了maximumPoolSize，就会由上面那位星期天(RejectedExecutionHandler)抛出异常；     
+    4，队列已满，总线程数又达到了maximumPoolSize，就会由线程池的拒绝策略处理；     
 
     java线程池的拒绝策略的实现:  
     1,ThreadPoolExecutor.AbortPolicy:丢弃任务并抛出RejectedExecutionException异常。  
