@@ -107,11 +107,22 @@
 ##### volatile的作用？   
 
     使用volatile修饰的变量实现线程同步，但是volatile修饰的变量不具备原子性和线程安全性;       
-    
 
-* run方法是否可以抛出异常？如果抛出异常，线程的状态如何？
-* 什么是隐式锁？什么是显式锁？什么是无锁？
-* 多线程之间是如何通信的？
+##### run方法是否可以抛出异常？如果抛出异常，线程的状态如何？
+
+    run方法不可以抛出异常,如果抛出异常线程则会被终结，但主线程和其他线程不受影响;     
+    ref:https://blog.csdn.net/u010853261/article/details/61419677     
+
+##### 什么是隐式锁？什么是显式锁？什么是无锁？
+
+    隐式锁：被synchronized关键字所修饰的方法或者代码块，因为使用Synchronized加锁，不需要显式的去执行加锁和解锁的过程，   
+           都由底层的jvm来执行，所以叫隐式锁；   
+    显式锁: java的concurrent包提供了lock接口，使用者可轮询，中断，定时锁操作，所有的加锁和解锁过程都是显式的，因此成为  
+           显式锁；例如：ReentrantLock，ReentrantReadWriteLock等;   
+    无锁:  java无锁的实现是通过CSA来实现的，该操作是原子性的；例如：java.util.concurrent包中AtomicBoolean、   
+           AtomicInteger、AtomicIntegerArray、AtomicLong、AtomicReference、AtomicReferenceArray。       
+           
+##### 多线程之间是如何通信的？
 * Java的内存模型是什么？
 * 什么是原子操作？生成对象的过程是不是原子操作？
 * CopyOnWrite机制是什么？
