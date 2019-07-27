@@ -10,7 +10,7 @@
     去重:   
     distinct()    
     聚合:      
-    reduceByKey(),groupBy(),groupByKey(),aggregateByKey(),combineByKey()    
+    reduceByKey(),groupBy(),groupByKey(),treeAggregate(),aggregateByKey(),combineByKey()    
     排序:  
     sortByKey(),sortBy()     
     重分区:  
