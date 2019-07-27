@@ -174,13 +174,13 @@
     5,使用map-side预聚合的shuffle操作; 这种是必须要使用shuffle算子的情况下优化的方法;意思就是说先在map端预处理(聚合)，然后  
       再进行reduce，这样就会大大减少需要拉取的数据数量，从而也就减少了磁盘IO以及网络传输开销；例如：使用reduceByKey或者     
       aggregateByKey算子来替代掉groupByKey算子；
-    6，使用高性能的算子：  
-       例如： 
-       使用reduceByKey/aggregateByKey替代groupByKey     
-       使用mapPartitions替代普通map   
-       使用foreachPartitions替代foreach   
-       使用filter之后进行coalesce操作    
-       使用repartitionAndSortWithinPartitions替代repartition与sort类操作   
+    6,使用高性能的算子：  
+      例如： 
+      使用reduceByKey/aggregateByKey替代groupByKey     
+      使用mapPartitions替代普通map   
+      使用foreachPartitions替代foreach   
+      使用filter之后进行coalesce操作    
+      使用repartitionAndSortWithinPartitions替代repartition与sort类操作   
     
    ref:https://tech.meituan.com/2016/04/29/spark-tuning-basic.html
 
