@@ -56,11 +56,14 @@
       ref:https://www.iteblog.com/archives/2320.html  
 
 #### MR与Spark的区别
-    1,Spark计算的中间结果可以存储在内存中，而MR计算结果需要落盘,所以Spark比MR拥有更适合数据挖掘和机器学习需要迭代的优点；  
-    2,Spark可以做低延迟的交互式查询需求；而MR先天性计算缓慢无法实现；    
-    3,Spark每个作业单独调度，可以把所有作业做为一张图来进行调度，作业之间相互依赖，但在调度的过程中并行调度，速度快；  
-    4,Spark提供了更加丰富的算子可供简单使用，以及更多的语言支持；  
-    5,Spark拥有一站式大数据处理的功能，例如：saprkSql,流计算，机器学习，图计算等;  
+    1,Spark计算的中间结果可以存储在内存中，而MR计算结果需要落盘，这样必然会有磁盘的io操作，影响性能,   
+      所以Spark比MR拥有更适合数据挖掘和机器学习需要迭代的优点； 
+    2,容错性，spark是使用弹性分布式数据集RDD来实现容错性，某一部分出现错误或者数据丢失则会通过血统关系来重新构建；而MR则    
+      需要重新计算，成本较高;  
+    3,Spark可以做低延迟的交互式查询需求；而MR先天性计算缓慢无法实现；    
+    4,Spark每个作业单独调度，可以把所有作业做为一张图来进行调度，作业之间相互依赖，但在调度的过程中并行调度，速度快；  
+    5,Spark提供了更加丰富的算子可供简单使用，以及更多的语言支持；  
+    6,Spark拥有一站式大数据处理的功能，例如：saprkSql,流计算，机器学习，图计算等;  
 
 * 对大数据领域有什么自己的见解
 * 平常怎么学习大数据的  
@@ -137,12 +140,50 @@
 ![](https://ws3.sinaimg.cn/large/006tNc79gy1g300u84rzsj316u0ngjt4.jpg) 
 
 #### Hadoop3.0做了哪些改进
-* 为什么项目选择使用Spark，你觉得Spark的优点在哪里
-* 了解Flink与Storm嘛，他们与Spark Streaming的区别在哪里
+    
+    新特性：HDFS 可擦除编码、多Namenode支持、MR Native Task优化、YARN基于cgroup的内存和磁盘IO隔离、YARN container resizing等。    
+    ref:https://blog.51cto.com/zero01/2096435    
+    
+    
+##### 为什么项目选择使用Spark，你觉得Spark的优点在哪里  
+    
+    根据业务场景选取技术;  
+    优势：  
+    1，比较高的计算性能,因为spark在计算的时候会把数据加载到集群主机的分布式内存中，可以被快速的转换迭代，并缓存便于后续的频繁访问需求；  
+    2，spark的多语言的支持:java，scala,python,R；    
+    3，和hadoop生态圈友好的兼容；  
+    4，spark作为快速的一站式大数据处理平台，拥有各种不同的应用：批处理，流计算，机器学习，图计算，交互式查询等；  
+
+##### 了解Flink与Storm嘛，他们与Spark Streaming的区别在哪里
+
+    spark Streaming属于微批处理(mini-batches),而Flink和Storm属于实时流处理框架。     
+    ref:https://bigdata.163yun.com/product/article/5     
+        https://www.iteblog.com/archives/1624.html      
+    
+
 * 1TB文件，取重复的词，top5指定的资源的场景下，如何快速统计出来
 * 
 * 说说项目
-* Spark哪部分用得好，如何调优
+##### Spark哪部分用得好，如何调优
+
+    1,避免创建重复的RDD;   
+    2,尽可能复用同一个RDD;  
+    3,对多次使用的rdd进行持久化操作；
+    4,尽量避免使用shuffle类算子; shuffle过程，简单来说，就是将分布在集群中多个节点上的同一个key，       
+       拉取到同一个节点上，进行聚合或join等操作。比如reduceByKey、join等算子，都会触发shuffle操作。  
+    5,使用map-side预聚合的shuffle操作; 这种是必须要使用shuffle算子的情况下优化的方法;意思就是说先在map端预处理(聚合)，然后  
+      再进行reduce，这样就会大大减少需要拉取的数据数量，从而也就减少了磁盘IO以及网络传输开销；例如：使用reduceByKey或者     
+      aggregateByKey算子来替代掉groupByKey算子；
+    6，使用高性能的算子：  
+       例如： 
+       使用reduceByKey/aggregateByKey替代groupByKey     
+       使用mapPartitions替代普通map   
+       使用foreachPartitions替代foreach   
+       使用filter之后进行coalesce操作    
+       使用repartitionAndSortWithinPartitions替代repartition与sort类操作   
+    
+   ref:https://tech.meituan.com/2016/04/29/spark-tuning-basic.html
+
 * Java哪部分了解比较好
 * 聊聊并发，并发实现方法，volatile关键字说说
 * HashMap的底层原理
