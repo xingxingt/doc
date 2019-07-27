@@ -184,9 +184,9 @@
       使用repartitionAndSortWithinPartitions替代repartition与sort类操作  
     7,广播大变量,避免每个task都去拉取一个变量的副本,广播后在每个Executor中会有一个变量的副本，减少网络io开销，以及GC；   
     8,使用Kryo优化序列化性能    
-    9,优化数据结构
-   ref:https://tech.meituan.com/2016/04/29/spark-tuning-basic.html  
-       https://tech.meituan.com/2016/05/12/spark-tuning-pro.html
+    9,优化数据结构   
+    ref:https://tech.meituan.com/2016/04/29/spark-tuning-basic.html    
+        https://tech.meituan.com/2016/05/12/spark-tuning-pro.html    
 
 ##### spark内存模型  
     
