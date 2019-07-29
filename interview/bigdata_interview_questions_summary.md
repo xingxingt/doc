@@ -190,8 +190,33 @@
 
 ##### spark内存模型  
     
+    内存分类:    
+    存储内存：Executor内运行的并发任务共享JVM堆内内存，这些任务在缓存RDD数据和广播（Broadcast）数据时占用的内存被规划为存储（Storage）内存；         执行内存: 而这些任务在执行 Shuffle 时占用的内存被规划为执行（Execution）内存，剩余的部分不做特殊规划；  
     
+###### 静态内存管理:   
+   
+堆内内存模型：
+![](https://ws4.sinaimg.cn/large/006tNc79gy1g5h2osqypjj31co0py41i.jpg)
+   
+    堆内可用空间计算公式:  
+    可用的存储内存 = systemMaxMemory * spark.storage.memoryFraction * spark.storage.safetyFraction    
+    可用的执行内存 = systemMaxMemory * spark.shuffle.memoryFraction * spark.shuffle.safetyFraction     
 
+堆外内存模型:      
+![](https://ws4.sinaimg.cn/large/006tNc79gy1g5h2pwtfplj312s0i8aai.jpg)  
+  
+
+###### 统一的内存管理：  
+    
+    Spark 1.6 之后引入的统一内存管理机制，与静态内存管理的区别在于存储内存和执行内存共享同一块空间，可以动态占用对方的空闲区域;   
+    执行内存的空间被对方占用后，可让对方将占用的部分转存到硬盘，然后"归还"借用的空间    
+    存储内存的空间被对方占用后，无法让对方"归还"，因为需要考虑 Shuffle 过程中的很多因素，实现起来较为复杂   
+    
+堆内内存模型  
+![](https://ws3.sinaimg.cn/large/006tNc79gy1g5h2qx2jf3j31qs0rsgov.jpg)
+堆外内存模型  
+![](https://ws3.sinaimg.cn/large/006tNc79gy1g5h2rgw52ij31li0ouabk.jpg)
+ref:https://www.ibm.com/developerworks/cn/analytics/library/ba-cn-apache-spark-memory-management/index.html 
 
 * Java哪部分了解比较好
 * 聊聊并发，并发实现方法，volatile关键字说说
