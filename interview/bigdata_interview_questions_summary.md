@@ -239,7 +239,15 @@ ref:https://www.ibm.com/developerworks/cn/analytics/library/ba-cn-apache-spark-m
 
 # Spark
 
-* RDD,DAG,Stage怎么理解？
+##### RDD,DAG,Stage怎么理解？   
+
+    RDD:  弹性分布式数据集，数据分布存储于多个数据节点，可执行并行操作的数据集合;   
+    特性: 1,RDD一旦生成则是不可变的只读数据集;2,分布式存储，方便了并行计算；3，并行，基于某种分区规则将数据分配到多个分区，每个  
+          分区会启动一个task线程并行执行相同的业务逻辑;   
+    DAG:  RDD是对计算对象的抽象，DAG是对计算过程的抽象。DAG(directed acyclic graph， 有向无环图), 描述了任务执行的拓扑结构，  
+          代表了从输入RDD到结果RDD的变换关系。      
+    Stage:Spark在接收到提交的作业后，会进行RDD依赖分析并划分成多个stage，以stage为单位生成taskset并提交调度。  
+
 
 * 宽依赖 窄依赖怎么理解？
 
