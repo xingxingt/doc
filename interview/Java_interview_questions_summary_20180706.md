@@ -202,9 +202,7 @@
     在单线程下，StringBuilder更高效；     
     
 #### 集合类/集合框架图
-
-![](https://ws3.sinaimg.cn/large/006tKfTcgy1g0pceuy5n3j31g90u0dhn.jpg)
-![](https://ws2.sinaimg.cn/large/006tKfTcgy1g0pcexuvi2j31im0q00tw.jpg)
+![](https://ws2.sinaimg.cn/large/006tNc79gy1g5uenrsqx6j31v80lw46h.jpg)
 
 #### 集合类以及集合框架
     1,Set:HashSet的实现是利用HashMap来做的，LinkedHashSet是继承了HashSet底层用LinkedHashMap实现的,TreeSet底层使用二叉树树实现的，
@@ -339,7 +337,7 @@
      ref:https://www.jianshu.com/p/aa017a3ddc40  
 
 
-#### HashSet与HashMap怎么判断集合元素重复？
+#### HashSet与HashMap怎么判断元素重复？
      因为HashSet是基于HashMap来实现的，所以HashSet和HashMap都根据对象的hashCode和equals来判断的，如果对象和
      集合中元素的hashcode和equals都相同，则说明是重复元素;
 
