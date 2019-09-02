@@ -53,7 +53,7 @@
     
     
 
-#### 线程的生命周期是什么？线程池的生命周期是什么？线程池的初始化的时候，池里面的线程处于生命周期的那个阶段？
+#### 线程的生命周期是什么？线程池的生命周期是什么？线程池的初始化的时候，池里面的线程处于生命周期的那个阶段？ --待解决
 
     线程的生命周期:  
     新建（New）-->就绪（Runnable）-->运行（Running）-->阻塞（Blocked）-->死亡(Dead)      
@@ -68,27 +68,66 @@
     RUNNING：线程池可以接收任务，并且执行队列中的任务    
     SHUTDOWN：线程池不接收新任务，但是会执行队列中存储的任务    
     STOP：线程池不接收新任务，并且不会执行队列中的任务，同时打断正在执行的任务   
-    TIDYING：所有任务都执行结束会切换到这个状态，同时 workCount 为0。      
-    TERMINATED：terminated() 执行完成    
+    TIDYING：所有任务都执行结束会切换到这个状态，同时 workCount(有效的线程个数)为0。      
+    TERMINATED：terminated() 执行完成      
+    ref:http://objcoding.com/2019/04/25/threadpool-running/ 
     
+##### 什么是线程组？其作用是什么？   
     
-    
+    线程组(ThreadGroup):    
+    简单来说就是一个线程集合。线程组的出现是为了更方便地管理线程。    
+    线程组是父子结构的，一个线程组可以集成其他线程组，同时也可以拥有其他子线程组。从结构上看，线程组是一个树形结构，   
+    每个线程都隶属于一个线程组，线程组又有父线程组，这样追溯下去，可以追溯到一个根线程组——System线程组。   
+    作用:    
+    可以批量管理线程或线程组对象，有效地对线程或线程组对象进行组织。   
+   
+    ref:https://juejin.im/post/5ca33a0af265da30c1724a6e#%E7%BA%BF%E7%A8%8B%E7%BB%84%E4%BB%8B%E7%BB%8D
+
+
+##### ThreadLocal是用来解决共享资源的多线程访问的问题吗？
+
+    threadlocal原理:   
+    threadlocal其实是在每个线程中维护着一个ThreadLocalMap，该map是以当前线程为key，以set的value为value；     
+    threadlocal的get或者set方法就是通过线程内部的ThreadlocalMap来进行对象的存取;     
+    threadlocal本身并不存放值，他只是作为key能让线程从TheadlocalMap中获取value；   
+    所以threadlocal能够实现线程间的数据隔离，获取当前线程的局部变量值，不受其他线程影响;    
+    设计理念:   
+    ThreadLocal的设计目的是实现在当前线程中有自己的变量，并不是为了解决高并发和共享变量的问题;  
+    ref:https://juejin.im/post/5ac2eb52518825555e5e06ee#comment   
     
 
-* 什么是线程组？其左右是什么？
-* ThreadLocal是用来解决共享资源的多线程访问的问题吗？
+##### 每次使用完ThreadLocal，都调用它的remove()方法，为什么呢？
 
-* 每次使用完ThreadLocal，都调用它的remove()方法，为什么呢？
-* volatile的作用？
-* run方法是否可以抛出异常？如果抛出异常，线程的状态如何？
-* 什么是隐式锁？什么是显式锁？什么是无锁？
-* 多线程之间是如何通信的？
+    由于ThreadLocal内部类ThreadLocalMap的生命周期跟Thread一样长，如果没有手动删除对应key就会导致内存泄漏，而不是因为弱引用。       
+    ThreadLocalMap中只是key指定了弱引用，但是value并不是弱引用，而是强引用，当把threadlocal实例置为null以后,没有任何强引用     
+    指向threadlocal实例,所以threadlocal将会被gc回收，,因为存在一条从current thread连接过来的强引用. 只有当前thread结束以后,    
+    current thread就不会存在栈中,强引用断开！所以想要避免内存泄露就要手动remove()掉！    
+    ref:ref:https://juejin.im/post/5ba9a6665188255c791b0520      
+    
+##### volatile的作用？   
+
+    使用volatile修饰的变量实现线程同步，但是volatile修饰的变量不具备原子性和线程安全性;       
+
+##### run方法是否可以抛出异常？如果抛出异常，线程的状态如何？
+
+    run方法不可以抛出异常,如果抛出异常线程则会被终结，但主线程和其他线程不受影响;     
+    ref:https://blog.csdn.net/u010853261/article/details/61419677     
+
+##### 什么是隐式锁？什么是显式锁？什么是无锁？
+
+    隐式锁：被synchronized关键字所修饰的方法或者代码块，因为使用Synchronized加锁，不需要显式的去执行加锁和解锁的过程，   
+           都由底层的jvm来执行，所以叫隐式锁；   
+    显式锁: java的concurrent包提供了lock接口，使用者可轮询，中断，定时锁操作，所有的加锁和解锁过程都是显式的，因此成为  
+           显式锁；例如：ReentrantLock，ReentrantReadWriteLock等;   
+    无锁:  java无锁的实现是通过CSA来实现的，该操作是原子性的；例如：java.util.concurrent包中AtomicBoolean、   
+           AtomicInteger、AtomicIntegerArray、AtomicLong、AtomicReference、AtomicReferenceArray。       
+           
+##### 多线程之间是如何通信的？
 * Java的内存模型是什么？
 * 什么是原子操作？生成对象的过程是不是原子操作？
 * CopyOnWrite机制是什么？
 * 什么是CAS?
 * 什么是AQS?
-
 * Fail-Fast机制是多线程原因造成的吗？
 * 为什么要用线程池？常见的线程池有哪些？
 * 阻塞队列的常用方法？
