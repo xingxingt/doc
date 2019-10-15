@@ -295,9 +295,40 @@ ref:https://www.ibm.com/developerworks/cn/analytics/library/ba-cn-apache-spark-m
 
 ##### spark 作业提交流程是怎么样的，client和 cluster 有什么区别，各有什么作用  
 
+    作业提交流程见上!   
     client和cluster两个的区别在于spark作业提交后driver主进程会在哪里启动;   
 
-* spark on yarn 作业执行流程，yarn-client 和 yarn cluster 有什么区别
+##### spark on yarn 作业执行流程，yarn-client 和 yarn cluster 有什么区别
+
+    yarn-client作业执行流程:     
+    1,客户端提交一个Application，在客户端启动一个Driver进程。   
+    2,Driver进程会向RS(ResourceManager)发送请求，启动AM(ApplicationMaster)的资源。  
+    3,RS收到请求，随机选择一台NM(NodeManager)启动AM。这里的NM相当于Standalone中的Worker节点。    
+    4,AM启动后，会向RS请求一批container资源，用于启动Executor.   
+    5,RS会找到一批NM返回给AM,用于启动Executor。   
+    6,AM会向NM发送命令启动Executor。   
+    7,Executor启动后，会反向注册给Driver，Driver发送task到Executor,执行情况和结果返回给Driver端。    
+
+    ApplicationMaster的作用：   
+       为当前的Application申请资源   
+       给NodeManager发送消息启动Executor。   
+
+
+    yarn-cluster作业执行流程:    
+    1,客户机提交Application应用程序，发送请求到RS(ResourceManager),请求启动AM(ApplicationMaster)。    
+    2,RS收到请求后随机在一台NM(NodeManager)上启动AM（相当于Driver端）。   
+    3,AM启动，AM发送请求到RS，请求一批container用于启动Executor。    
+    4,RS返回一批NM节点给AM。   
+    5,AM连接到NM,发送请求到NM启动Executor。   
+    6,Executor反向注册到AM所在的节点的Driver。Driver发送task到Executor。    
+ 
+    ApplicationMaster的作用：   
+      为当前的Application申请资源    
+      给nodemanager发送消息 启动Excutor。   
+      任务调度。(这里和client模式的区别是AM具有调度能力，因为其就是Driver端，包含Driver进程)    
+
+    ref:https://blog.csdn.net/LHWorldBlog/article/details/79300036
+
 
 * spark streamning 工作流程是怎么样的，和 storm 比有什么区别
 
