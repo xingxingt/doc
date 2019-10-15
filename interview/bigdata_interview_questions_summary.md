@@ -249,29 +249,86 @@ ref:https://www.ibm.com/developerworks/cn/analytics/library/ba-cn-apache-spark-m
     Stage:Spark在接收到提交的作业后，会进行RDD依赖分析并划分成多个stage，以stage为单位生成taskset并提交调度。  
 
 
-* 宽依赖 窄依赖怎么理解？
+##### 宽依赖 窄依赖怎么理解？
 
-* Stage是基于什么原理分割task的？
+     窄依赖: 是指一个父RDD分区对应一个子RDD的分区，或者多个父RDD的分区对应一个子RDD的分区(不会产生shuffle),内部执行时pipline     
+            管道模式，失败恢复更方便，只需要重新计算父RDD的partition即可;      
+     宽依赖: 1个父RDD对应非全部多个子RDD分区，比如groupByKey，reduceByKey，sortByKey,      
+            1个父RDD对应所有子RDD分区，比如未经协同划分的join;      
+            会产生shuffle操作，从失败恢复的角度看，shuffle dependency牵涉RDD各级的多个parent partition。    
+     如果父RDD分区对应1个子RDD的分区就是窄依赖，否则就是宽依赖。            
 
-* 血统的概念
+##### Stage是基于什么原理分割task的？  
 
-* 任务的概念
+    一个Stage内，最终的RDD有多少个partition，就会产生多少个task
+     
+##### 血统的概念   
+    
+    血统描述的是RDD的前后依赖关系;  
+    RDD数据集通过所谓的血统关系(Lineage)记住了它是如何从其它RDD中演变过来的,当RDD数据丢失时则会通过lineage来获取丢失的数据；     
+   
+##### 任务的概念
 
-* 容错方法
+    Spark的Job来源于用户执行action操作，就是从RDD中获取结果的操作，而不是将一个RDD转换成另一个RDD的transformation操作。    
+
+##### 容错方法  
+
+    1，血统  
+    2，checkPoint
 
 * 粗粒度和细粒度
 
 * Spark优越性
 
-* Spark为什么快
+##### Spark为什么快  
 
+    1，spark是基于内存的分布式计算框架     
+    2，Spark的DAG计算模型，DAG计算模型可以减少大多数shuffle的操作，中间结果无须落盘，减少了磁盘IO的操作；    
+    3，Spark支持将需要反复用到的数据给Cache到内存中，减少数据加载耗时，所以Spark跑机器学习算法比较在行；  
+    4，Hadoop的多个MR作业之间的数据交互都要依赖于磁盘交互，而spark则是基于内存只有在shuffle的时候将数据写入磁盘；   
+    5, Spark的缓存机制比HDFS的缓存机制高效。  
+    6, Spark Task的启动时间快。Spark采用fork线程的方式，而Hadoop采用创建新的进程的方式。   
+   
 * Transformation和action是什么？区别？举几个常用方法
 
 * RDD怎么理解
 
-* spark 作业提交流程是怎么样的，client和 cluster 有什么区别，各有什么作用
+##### spark 作业提交流程是怎么样的，client和 cluster 有什么区别，各有什么作用  
 
-* spark on yarn 作业执行流程，yarn-client 和 yarn cluster 有什么区别
+    作业提交流程见上!   
+    client和cluster两个的区别在于spark作业提交后driver主进程会在哪里启动;   
+
+##### spark on yarn 作业执行流程，yarn-client 和 yarn cluster 有什么区别
+
+    yarn-client作业执行流程:     
+    1,客户端提交一个Application，在客户端启动一个Driver进程。   
+    2,Driver进程会向RS(ResourceManager)发送请求，启动AM(ApplicationMaster)的资源。  
+    3,RS收到请求，随机选择一台NM(NodeManager)启动AM。这里的NM相当于Standalone中的Worker节点。    
+    4,AM启动后，会向RS请求一批container资源，用于启动Executor.   
+    5,RS会找到一批NM返回给AM,用于启动Executor。   
+    6,AM会向NM发送命令启动Executor。   
+    7,Executor启动后，会反向注册给Driver，Driver发送task到Executor,执行情况和结果返回给Driver端。    
+
+    ApplicationMaster的作用：   
+       为当前的Application申请资源   
+       给NodeManager发送消息启动Executor。   
+
+
+    yarn-cluster作业执行流程:    
+    1,客户机提交Application应用程序，发送请求到RS(ResourceManager),请求启动AM(ApplicationMaster)。    
+    2,RS收到请求后随机在一台NM(NodeManager)上启动AM（相当于Driver端）。   
+    3,AM启动，AM发送请求到RS，请求一批container用于启动Executor。    
+    4,RS返回一批NM节点给AM。   
+    5,AM连接到NM,发送请求到NM启动Executor。   
+    6,Executor反向注册到AM所在的节点的Driver。Driver发送task到Executor。    
+ 
+    ApplicationMaster的作用：   
+      为当前的Application申请资源    
+      给nodemanager发送消息 启动Excutor。   
+      任务调度。(这里和client模式的区别是AM具有调度能力，因为其就是Driver端，包含Driver进程)    
+
+    ref:https://blog.csdn.net/LHWorldBlog/article/details/79300036
+
 
 * spark streamning 工作流程是怎么样的，和 storm 比有什么区别
 
@@ -279,7 +336,7 @@ ref:https://www.ibm.com/developerworks/cn/analytics/library/ba-cn-apache-spark-m
 
 * spark 机器学习和 spark 图计算接触过没，，能举例说明你用它做过什么吗？
 
-* spark rdd 是怎么容错的，基本原理是什么？
+* spark rdd 是怎么容错的，基本原理是什么(https://www.cnblogs.com/duanxz/p/6329675.html)？  
 
 
 
